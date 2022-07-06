@@ -1,7 +1,8 @@
 const ROLES = require("../constants/roles.js");
 const CHANNELS = require("../constants/channels.js");
 const MESSAGES = require("../constants/messages.js");
-const { wasRoleRemoved, onWelcome } = require("../utils/methods.js");
+const { wasRoleRemoved, onWelcome, getChannel, getUser } = require("../utils/methods.js");
+const EMBEDS = require("../utils/embeds.js");
 
 module.exports = LISTENERS = {
     welcomeMessage: (oldMember, newMember) => {
@@ -24,14 +25,32 @@ module.exports = LISTENERS = {
         }
     },
 
-    userEnterToServer: (member) => { 
-        // add the unverified role to the user
-        if(!member.roles.cache.has(ROLES.NotVerified))
-            member.roles.add(ROLES.NotVerified);
-    },
+    userEnterServer: (member) => { 
+        if(member.user.bot) // bypass bots
+        {
+            const channel = getChannel(CHANNELS.PRESENTATION);
+            if(channel)
+            {
+                channel.send(MESSAGES.Welcome(member.user));
+            }
+            return;
+        }
 
+        member.roles.add(ROLES.NotVerified); // add the unverified role
+        const channel = getChannel(CHANNELS.VERIFICATION); // get the verification channel
+
+        setTimeout(() => {
+            client.users.fetch(ROLES.ADMIN)
+            .then(user => {
+                EMBEDS.embed(channel, user);
+            })
+            .catch(console.error);
+        }, 1500); // send the embed after 1.5 seconds
+    },
+    
     serverAuthentication: (message) => {
         if(message.author.bot) return;
+        if(!message.member.roles.cache.has(ROLES.NotVerified)) return;
         // listen for the password on the respective channel
         if(message.channelId === CHANNELS.VERIFICATION)
         {
@@ -39,7 +58,7 @@ module.exports = LISTENERS = {
             {
                 // if the passowrd is correct remove the unverified role
                 message.member.roles.remove(ROLES.NotVerified);
-                message.channel.send("Te has verificado correctamente.");
+                message.member.roles.add(ROLES.USER);
             }
             else
             {
@@ -48,4 +67,11 @@ module.exports = LISTENERS = {
             }
         }
     },
+
+    userLeaveServer: (member) => {
+        if(member.roles.cache.has(ROLES.NotVerified)) return;
+        member.guild.channels.cache.find(
+            channel => channel.id === CHANNELS.PRESENTATION
+        ).send(`${member.user.username} ha salido del servidor.`);
+    }
 }

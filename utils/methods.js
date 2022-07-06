@@ -12,3 +12,13 @@ exports.onWelcome = (channelId, message) => {
         channel.send(message);
     }
 }
+
+exports.getUser = (userId, member) => {
+    const user = member.guild.members.cache.find(user => user.id === userId);
+    return user;
+}
+
+exports.getChannel = (channelId) => {
+    const channel = client.channels.cache.find(channel => channel.id === channelId);
+    return channel;
+}
