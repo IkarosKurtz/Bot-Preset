@@ -1,7 +1,7 @@
 const ROLES = require("../constants/roles.js");
 const CHANNELS = require("../constants/channels.js");
 const MESSAGES = require("../constants/messages.js");
-const { wasRoleRemoved, onWelcome, getChannel, getUser } = require("../utils/methods.js");
+const { getChannel, wasRoleRemoved, onWelcome } = require("../methods.js");
 const EMBEDS = require("../utils/embeds.js");
 
 module.exports = LISTENERS = {
@@ -9,7 +9,7 @@ module.exports = LISTENERS = {
         // If the user has been verified, remove the role and send a welcome message
         const wasRemove = wasRoleRemoved(oldMember, newMember, ROLES.NotVerified);
         if (wasRemove) {
-            onWelcome(CHANNELS.PRESENTATION, MESSAGES.Welcome(newMember.user));
+            onWelcome(newMember, CHANNELS.PRESENTATION, MESSAGES.Welcome(newMember));
         }
     },
 
@@ -20,29 +20,33 @@ module.exports = LISTENERS = {
         const args = message.content.slice(prefix.length).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
 
-        if(command === "ping") {
-            message.reply("pong");
+        switch (command) {
+            case "ping":
+                message.reply("pong");
+                break;
+        
+            case "clear":
+                message.channel.bulkDelete(args[0]);
         }
     },
 
-    userEnterServer: (member) => { 
+    userEnterServer: (member, client) => { 
         if(member.user.bot) // bypass bots
         {
-            const channel = getChannel(CHANNELS.PRESENTATION);
-            if(channel)
-            {
-                channel.send(MESSAGES.Welcome(member.user));
-            }
-            return;
+                var channel = getChannel(member, CHANNELS.PRESENTATION);
+                if(channel)
+                {
+                    channel.send(MESSAGES.Welcome(member.user));
+                }
+                return;
         }
 
         member.roles.add(ROLES.NotVerified); // add the unverified role
-        const channel = getChannel(CHANNELS.VERIFICATION); // get the verification channel
-
+        var channel =  getChannel(member, CHANNELS.VERIFICATION) // get the verification channel
         setTimeout(() => {
             client.users.fetch(ROLES.ADMIN)
             .then(user => {
-                EMBEDS.embed(channel, user);
+                EMBEDS.VerificationMessage(channel, user);
             })
             .catch(console.error);
         }, 1500); // send the embed after 1.5 seconds

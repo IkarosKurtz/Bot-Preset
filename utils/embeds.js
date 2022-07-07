@@ -1,8 +1,6 @@
-const { MessageEmbed } = require('discord.js')
-const ROLES = require('../constants/roles.js');
-const {getUser} = require('./methods.js');
+const { MessageEmbed } = require('discord.js');
 
-exports.embed = (channel, member) => {
+exports.VerificationMessage = (channel, member) => {
     const embed = new MessageEmbed()
     .setColor('#0099ff')
     .setTitle('Verificacion de cuenta')
@@ -18,4 +16,14 @@ exports.embed = (channel, member) => {
     .setTimestamp()
 
     channel.send({embeds: [embed]});
+}
+
+exports.HelpMessage = (channel, member) => {
+    const embed = new MessageEmbed()
+    .setColor('BLURPLE')
+    .setTitle('Commandos')
+    .setAuthor({
+        name: member.guild.name,
+        iconURL: member.guild.iconURL(),
+    })
 }
