@@ -1,6 +1,6 @@
 const client = require("./utils/client.js");
 const { MessageEmbed } = require("discord.js");
-const LISTENERS = require("./listeners/messageCreate.js");
+const LISTENERS = require("./listeners/Listeners.js");
 const ROLES = require("./constants/roles.js");
 const CHANNELS = require("./constants/channels.js");    
 const EMBEDS = require("./utils/embeds.js");
@@ -19,39 +19,6 @@ client.on('messageCreate', async message => {
     const command = args.shift().toLowerCase();
 
     switch (command) {
-        case "ping":
-            message.reply("pong");
-            break;
-    
-        case "clear":
-            if(args[0] === undefined) return;
-            message.channel.bulkDelete(args[0]);
-            break;
-
-        case "help":
-            const embed = new MessageEmbed()
-            .setColor('BLURPLE')
-            .setTitle('Commandos')
-            .setDescription("Estos son los comandos disponibles:")
-            .setAuthor({
-                name: message.member.guild.name,
-                iconURL: message.member.guild.iconURL(),
-            })
-            .addFields(
-                {
-                    name : `?ping`,
-                    value : `Muestra el ping del bot`,
-                },
-                {
-                    name : `?clear [cantidad]`,
-                    value : `Elminar mensajes en el canal en el que fue enviado`,
-                }
-            )
-            .setThumbnail("https://cdn-icons-png.flaticon.com/512/57/57108.png")
-            .setTimestamp();
-            message.channel.send({embeds : [embed]});
-            break;
-
         case "verify":
             const Canvas = require('canvas');
             const canvas = Canvas.createCanvas(700, 250);
