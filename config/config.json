@@ -1,6 +1,5 @@
 {
   "prefix": "?",
-  "guildId": "a",
   "welcomeMessages": [
     "Pasale {user} nostros no mordemos pero primero ve y lee {channel}",
     "Binvenido al **{server}** {user} favor de leer {channel}",
