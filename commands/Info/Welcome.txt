@@ -1,0 +1,48 @@
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const { join } = require('path');
+const { MessageAttachment } = require('discord.js');
+
+module.exports = {
+    name: "a",
+    aliases: ["ms", "latency"],
+    desc: "Send a welcome message to a user.",
+    run: async(client, message, args, prefix) => {
+        registerFont(join(__dirname, '../../src/fonts','Ubuntu-Bold.ttf'), { family: 'ubuntuB' });
+        registerFont(join(__dirname, '../../src/fonts','Ubuntu-Regular.ttf'), { family: 'ubuntuR' });
+
+        message.reply("Cargando Imagen...")
+
+        const { guild } = message.member;
+
+        const canvas = createCanvas(1920, 1080);
+        const ctx = canvas.getContext('2d');
+
+        const background = await loadImage(join(__dirname, '../../img', 'bg.jpg'));
+        const pfp = await loadImage(message.member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 512 }));
+        let x = 0;
+        let y = 0;
+        ctx.drawImage(background, x, y, canvas.width, canvas.height);
+        
+        x = canvas.width / 2 - pfp.width / 2;
+        y = 30;
+        ctx.drawImage(pfp, x, y, pfp.width, pfp.height);
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 150px ubuntuB';
+        let text = `Welcome ${message.member.user.username}`;
+        x = canvas.width / 2 - ctx.measureText(text).width / 2;
+        y = canvas.height - (canvas.height / 3);
+        ctx.fillText(text, x, y);
+
+        ctx.fillStyle = '#FF4D2A';
+        ctx.font = 'bold 150px ubuntuR';
+        text = `to ${guild.name}`;
+        x = canvas.width / 2 - ctx.measureText(text).width / 2;
+        y = canvas.height - (canvas.height / 5);
+        ctx.fillText(text, x, y);
+        
+        const attachment = new MessageAttachment(canvas.toBuffer(), 'welcome.png');
+
+        message.channel.send({files: [attachment]});
+    }
+}

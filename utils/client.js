@@ -7,16 +7,17 @@ const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS],
 });
 
-var guild = require("../config/config.json").guildId;
+var guild = process.env.GUILD;
+
 
 // Search for the token in the .env file, dont share your token
 const token = process.env.TOKEN;
 
 client.once('ready', (bot) => {
-    console.log('Its showtime 😎');
-    setInterval(() => {
+    console.log('Its showtime '.rainbow + '😎');
+    setInterval(() => { // Delete 100 messages in the verification channel every 2 minutes
         client.guilds.cache.get(guild).channels.cache.get(CHANNELS.VERIFICATION).bulkDelete(100);
-    },5000);
+    },120000);
 });
 
 client.commands = new Collection();

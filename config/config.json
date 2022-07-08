@@ -1,4 +1,10 @@
 {
-    "prefix": "?",
-    "guildId": "760014407681703967"
+  "prefix": "?",
+  "guildId": "a",
+  "welcomeMessages": [
+    "Pasale {user} nostros no mordemos pero primero ve y lee {channel}",
+    "Binvenido al **{server}** {user} favor de leer {channel}",
+    "Quitate los 👟 zapatos antes de entrar a y lee {channel}",
+    "Ay wey se unio {user}, por favor dirigete a {channel}"
+  ]
 }

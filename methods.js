@@ -1,3 +1,4 @@
+const { ADMIN, MOD } = require('./constants/roles.js');
 
 exports.wasRoleRemoved = (oldUser, newUser, roleId) => 
     oldUser.roles.cache.has(roleId) && !newUser.roles.cache.has(roleId);
@@ -19,3 +20,7 @@ exports.getChannel = (member, channelId) => {
     var myChannel = member.guild.channels.cache.get(channelId);
     return myChannel;
 };
+
+exports.hasAdminRole = (member) => member.roles.cache.has(ADMIN)
+
+exports.hasModRole = (member) => member.roles.cache.has(MOD)

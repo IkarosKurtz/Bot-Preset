@@ -18,10 +18,16 @@ module.exports = {
                     name : `?ping`,
                     value : `Muestra el ping del bot`,
                 },
+
                 {
                     name : `?clear [cantidad]`,
-                    value : `Elminar mensajes en el canal en el que fue enviado`,
-                }
+                    value : `Elminar mensajes en el canal en el que fue enviado`
+                },
+
+                {
+                    name : `?setWelcome`,
+                    value : `Configurar mensajes de bienvenida`
+                },
             )
             .setThumbnail("https://cdn-icons-png.flaticon.com/512/57/57108.png")
             .setTimestamp();

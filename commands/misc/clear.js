@@ -3,7 +3,11 @@ module.exports = {
     aliases: ["erase", "clean", "delete"],
     desc: "Elminar mensajes en el canal en el que fue enviado",
     run: async(client, message, args, prefix) => {
-        if(args[0] === undefined) return;
-        message.channel.bulkDelete(args[0]);
+        const { hasAdminRole, hasModRole } = require('../../methods.js');
+        if(hasAdminRole(message.member) || hasModRole(message.member)) 
+        {
+            if(args[0] === undefined) return;
+            message.channel.bulkDelete(args[0]);
+        }
     }
 }
